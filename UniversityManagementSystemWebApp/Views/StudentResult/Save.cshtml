@@ -1,0 +1,187 @@
+﻿@using UniversityManagementSystemWebApp.Models
+@model UniversityManagementSystemWebApp.Models.StudentResult
+@{
+    ViewBag.Title = "Student Result";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-body single-service-bg">
+    <div class="issue-book-area">
+        <div class="formdesign">
+            <h2>@ViewBag.Title</h2>
+
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myForm" }))
+            {
+                <table>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.StudentId)</td>
+                        <td>
+                            @Html.DropDownListFor(x => x.StudentId, (List<SelectListItem>)ViewBag.StudentList, "--SELECT--", new { @class = "btn btn-default dropdown-toggle" })
+                            @Html.ValidationMessageFor(x => x.StudentId)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Student Name")</td>
+                        <td>
+                            @Html.TextBox("StudentName", null, new { @readonly = "readonly" })
+                            @*@Html.ValidationMessageFor(x => x.Student.Name)*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Student Email")</td>
+                        <td>
+                            @Html.TextBox("StudentEmail", null, new { @readonly = "readonly" })
+                            @*@Html.ValidationMessageFor(x => x.Student.Email)*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Department Name")</td>
+                        <td>
+                            @Html.TextBox("DepartmentName", null, new { @readonly = "readonly" })
+                            @*@Html.ValidationMessageFor(x => x.Student.DepartmentId)*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.CourseId)</td>
+                        <td>
+                            <select id="CourseId" name="CourseId" class="btn btn-default dropdown-toggle" >
+                                <option value="">--Select--</option>
+                            </select>
+                            @Html.ValidationMessageFor(x => x.CourseId)
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.GradeId)</td>
+                        <td>
+                            @Html.DropDownListFor(x => x.GradeId, (List<SelectListItem>)ViewBag.GradeList, "--SELECT--", new { @class = "btn btn-default dropdown-toggle" })
+                            @Html.ValidationMessageFor(x => x.GradeId)
+                        </td>
+                    <tr>
+                        <td>
+                            <input type="submit" value="Save" />
+                        </td>
+
+                    </tr>
+                </table>
+                if (ViewBag.Message != null)
+                {
+                    <p>@ViewBag.Message</p>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    
+
+    <script>
+        
+
+        function getStudentInfo(stdId) {
+
+            var json = { StudentId: stdId };
+
+            $.ajax({
+                type: "POST",
+
+                url: '@Url.Action("GetStudentById", "StudentResult")',
+
+                contentType: "application/json; charset=utf-8",
+
+                data: JSON.stringify(json),
+
+                success: function (data) {
+
+                    $("#StudentName").val(data.Name);
+                    $("#StudentEmail").val(data.Email);
+                    $("#DepartmentName").val(data.DepartmentName);
+                    $("#CourseId").empty();
+                    $("#CourseId").append('<option value="">--SELECT--</option>');
+
+                }
+            });
+        }
+
+        function getCourses(stdId) {
+
+            var json = { StudentId: stdId };
+
+            $.ajax({
+                type: "POST",
+
+                url: '@Url.Action("GetCoursesById", "StudentResult")',
+
+                contentType: "application/json; charset=utf-8",
+
+                data: JSON.stringify(json),
+
+                success: function (data) {
+
+                    $("#CourseId").empty();
+                    $("#CourseId").append('<option value="">--SELECT--</option>');
+
+                    $.each(data, function (key, value) {
+
+                        $("#CourseId").append('<option value="' + value.Id + '">' + value.Name + '</option>');
+
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+            $("#StudentId").change(function () {
+                var stdId = $("#StudentId").val();
+                if (stdId == "") {
+
+                    $("#StudentName").val("");
+                    $("#StudentEmail").val("");
+                    $("#DepartmentName").val("");
+                    $("#CourseId").empty();
+                    $("#CourseId").append('<option value="">--SELECT--</option>');
+
+                } else {
+
+                    getStudentInfo(stdId);
+                    getCourses(stdId);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            var stdId = $("#StudentId").val();
+
+            if (stdId == "") {
+
+                $("#StudentName").val("");
+                $("#StudentEmail").val("");
+                $("#DepartmentName").val("");
+                $("#CourseId").empty();
+                $("#CourseId").append('<option value="">--SELECT--</option>');
+
+            }
+
+            getStudentInfo(stdId);
+            getCourses(stdId);
+
+        });
+
+        //$("#myForm").validate({
+        //    rules: {
+        //        CourseId: "required",
+        //        name: "required"
+
+        //    },
+        //    messages: {
+        //        CourseId: "Please select course",
+        //        name: "Please enter name"
+        //    }
+        //});
+
+</script>
+}

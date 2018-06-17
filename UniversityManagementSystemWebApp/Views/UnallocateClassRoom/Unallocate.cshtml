@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Unallocate ClassRoom";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-body single-service-bg">
+    <div class="issue-book-area">
+        <div class="formdesign">
+            <h2>@ViewBag.Title</h2>
+
+            @using (Html.BeginForm())
+            {
+                <input type="submit" onclick="return confirmFunction()" id="Unassign" value="Unallocate ClassRooms"  />
+
+                if (ViewBag.Message != null)
+                {
+                    <p>@ViewBag.Message</p>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+<script>
+    function confirmFunction() {
+
+        if (confirm("Are You Sure To Unallocate Classroom? If 'YES' Press 'OK' Or Press 'Cancel' ") == true) {
+                return true;
+            } else {
+                return false;
+            }
+
+    }
+    </script>
+}

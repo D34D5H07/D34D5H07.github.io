@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/myStyle.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+    <link href="~/Content/jquery.timepicker.css" rel="stylesheet" />
+    @RenderSection("styles", required:false)
+</head>
+<body class="bd">
+
+    <div id="templatemo_site_title_bar_wrapper">
+        <div id="templatemo_site_title_bar">
+
+            <div id="site_title">
+                <h1>
+                    <a href="#">
+                        <img src='@Url.Content("~/images/university.png")' alt="Portfolio" /> <span>University Management System</span>
+                    </a>
+                    @*@Html.ActionLink("University Management System", "Index", "Home")*@
+                </h1>
+            </div>
+
+            <div class="menu">
+                <ul>
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>
+                        <a href="">Department</a>
+                        <ul>
+                            <li>@Html.ActionLink("Department Entry", "Save", "Department")</li>
+                            <li>@Html.ActionLink("Department View", "ShowAllDepartment", "Department")</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="">Course</a>
+                        <ul>
+                            <li>@Html.ActionLink("Course Entry", "Save", "Course")</li>
+                            <li>@Html.ActionLink("View Course Statics", "Show", "AssignedCoursesView")</li>
+                            <li>@Html.ActionLink("Unassign Course", "Unassign", "UnassignCourse")</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="">Teacher</a>
+                        <ul>
+                            <li>@Html.ActionLink("Teacher Entry", "Save", "Teacher")</li>
+                            <li>@Html.ActionLink("Course Assign", "Save", "CourseAssign")</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="">Student</a>
+                        <ul>
+                            <li>@Html.ActionLink("Register Student", "Save", "Student")</li>
+                            <li>@Html.ActionLink("Course Enroll", "Save", "EnrollCourse")</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="">Result</a>
+                        <ul>
+                            <li>@Html.ActionLink("Result Entry", "Save", "StudentResult")</li>
+                            <li>@Html.ActionLink("View Result", "Show", "ViewResult")</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="">Allocation</a>
+                        <ul>
+                            <li>@Html.ActionLink("Allocate ClassRooms", "Save", "AllocateClassroom")</li>
+                            <li>@Html.ActionLink("View Class Schedule", "Show", "RoomAllocationView")</li>
+                            <li>@Html.ActionLink("Unallocate ClassRooms", "Unallocate", "UnallocateClassRoom")</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- end of menu -->
+
+        </div>
+        <!-- end of templatemo_site_title_bar -->
+
+    </div>
+
+    @*<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("Application name", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
+                </div>
+                <div class="navbar-collapse collapse menu">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a>abhi</a>
+                            <ul>
+                                <li>hi </li>
+                                <li>hi</li>
+                                <li>hhi</li>
+                            </ul>
+                        </li>
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("About", "About", "Home")</li>
+                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>*@
+<div class="container body-content">
+    @RenderBody()
+    <hr/>
+    <footer>
+        <div id="templatemo_footer_wrapper">
+            <div id="templatemo_footer">
+
+
+                <div class="cleaner_h20"></div>
+
+                <div align="center">
+                    <h3>Copyright &copy; @DateTime.Now.Year - BroGrammares</h3>
+                </div>
+
+            </div>
+            <!-- end of footer -->
+
+            <div class="cleaner"></div>
+        </div>
+    </footer>
+</div>
+
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/jquery.timepicker.js"></script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

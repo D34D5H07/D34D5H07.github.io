@@ -1,0 +1,201 @@
+﻿@using UniversityManagementSystemWebApp.Models
+@model UniversityManagementSystemWebApp.Models.EnrollCourse
+
+@{
+    ViewBag.Title = "Enroll Course";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+}
+
+<div class="main-body single-service-bg">
+    <div class="issue-book-area">
+        <div class="formdesign">
+            <h2>@ViewBag.Title</h2>
+
+            @using (Html.BeginForm(null, null, FormMethod.Post, new {id = "myForm"}))
+            {
+                <table>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.StudentId)</td>
+                        <td>
+                            @Html.DropDownListFor(x => x.StudentId, (List<SelectListItem>)ViewBag.StudentList, "--SELECT--", new { @class = "btn btn-default dropdown-toggle" })
+                            @Html.ValidationMessageFor(x => x.StudentId)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Student Name")</td>
+                        <td>
+                            @Html.TextBox("StudentName", null, new {@readonly = "readonly"})
+                            @*@Html.ValidationMessageFor(x => x.Student.Name)*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Student Email")</td>
+                        <td>
+                            @Html.TextBox("StudentEmail", null, new {@readonly = "readonly"})
+                            @*@Html.ValidationMessageFor(x => x.Student.Email)*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Department Name")</td>
+                        <td>
+                            @Html.TextBox("DepartmentName", null, new {@readonly = "readonly"})
+                            @*@Html.ValidationMessageFor(x => x.Student.DepartmentId)*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.CourseId)</td>
+                        <td>
+                            <select id="CourseId" name="CourseId" class="btn btn-default dropdown-toggle">
+                                <option value="">--Select--</option>
+                            </select>
+                            @Html.ValidationMessageFor(x => x.CourseId)
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Date)</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Date, new { @readonly = "readonly" })
+                            @Html.ValidationMessageFor(x => x.Date)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="submit" value="Enroll"/>
+                        </td>
+
+                    </tr>
+                </table>
+                if (ViewBag.Message != null)
+                {
+                    <p>@ViewBag.Message</p>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap-datepicker.js"></script>
+
+    <script>
+        function ClearField() {
+            $("#StudentName").val("");
+            $("#StudentEmail").val("");
+            $("#DepartmentName").val("");
+            $("#CourseId").empty();
+            $("#CourseId").append('<option value="">--SELECT--</option>');
+        }
+
+        function getStudentInfo(stdId) {
+
+            var json = { StudentId: stdId };
+
+            $.ajax({
+                type: "POST",
+
+                url: '@Url.Action("GetStudentById", "EnrollCourse")',
+
+                contentType: "application/json; charset=utf-8",
+
+                data: JSON.stringify(json),
+
+                success: function(data) {
+
+                    $("#StudentName").val(data.Name);
+                    $("#StudentEmail").val(data.Email);
+                    $("#DepartmentName").val(data.DepartmentName);
+                    $("#CourseId").empty();
+                    $("#CourseId").append('<option value="">--SELECT--</option>');
+
+                    var deptId = data.DepartmentId;
+                    getCourses(deptId);
+                }
+
+            });
+        }
+
+        function getCourses(deptId) {
+
+            var json = { DepartmentId: deptId };
+
+            $.ajax({
+                type: "POST",
+
+                url: '@Url.Action("GetCoursesById", "EnrollCourse")',
+
+                contentType: "application/json; charset=utf-8",
+
+                data: JSON.stringify(json),
+
+                success: function(data) {
+
+                    $("#CourseId").empty();
+                    $("#CourseId").append('<option value="">--SELECT--</option>');
+
+                    $.each(data, function(key, value) {
+
+                        $("#CourseId").append('<option value="' + value.Id + '">' + value.Name + '</option>');
+
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function() {
+
+            $("#StudentId").change(function() {
+                var stdId = $("#StudentId").val();
+                if (stdId === "") {
+
+                    ClearField();
+
+                } else {
+
+                    getStudentInfo(stdId);
+
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            var stdId = $("#StudentId").val();
+
+            if (stdId === "") {
+                ClearField();
+            }
+
+            getStudentInfo(stdId);
+
+
+        });
+
+        $('#Date').datepicker({
+            weekStart: 1,
+            todayHighlight: true,
+            todayBtn: "linked"
+        });
+
+        $("#myForm").validate({
+            rules: {
+                CourseId: "required"
+
+            },
+            messages: {
+                CourseId: "Please Select Course"
+
+            }
+        });
+
+    </script>
+}

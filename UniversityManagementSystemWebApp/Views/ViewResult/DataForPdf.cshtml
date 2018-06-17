@@ -1,0 +1,84 @@
+﻿@using System.Web.UI.WebControls
+@using UniversityManagementSystemWebApp.Models
+@using UniversityManagementSystemWebApp.Models.ViewModels
+@model UniversityManagementSystemWebApp.Models.ViewModels.ResultView
+
+@*@functions {
+    public class StudentInfo
+    {
+        public int Id;
+        public string RegNo;
+        public string Name;
+        public string Email;
+        public string DepartmentName;
+    }
+}*@
+
+
+@{
+    Layout = null;
+    ResultView studentInfo = ViewBag.StudentInfo;
+    var resultList = ViewBag.ResultList;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DataForPdf</title>
+</head>
+<body>
+    <div class="w3-content" style="width: 500px; max-width: 2000px; margin-top: 46px" align="center">
+
+        @*<div style="width: 25px; height: 25px;"> <img src="~/images/university.png" /></div>*@
+        <h3>Student Result</h3>
+
+        <div style="padding-top: 50px; width: 600px; height: 400px;">
+            <table>
+                <tr>
+                    <td>@Html.Label("StudentRegNo\t")</td>
+                    <td>
+                        <label>@studentInfo.RegNo</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Name\t\t")</td>
+                    <td><label>@studentInfo.StudentName</label></td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Email\t\t")</td>
+                    <td><label>@studentInfo.StudentEmail</label></td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Department\t")</td>
+                    <td><label>@studentInfo.DepartmentName</label></td>
+                </tr>
+
+
+            </table>
+            <br/>
+            <table border="1" id="ResultDetails">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Name</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody id="ResultDetailsBody">
+                @foreach (ResultView resultView in resultList)
+                {
+                    <tr>
+                        <td>@resultView.CourseCode</td>
+                        <td>@resultView.CourseName</td>
+                        <td>@resultView.Grade</td>
+                    </tr>
+                }
+                    </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>

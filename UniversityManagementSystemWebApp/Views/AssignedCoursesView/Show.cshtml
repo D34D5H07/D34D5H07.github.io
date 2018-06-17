@@ -1,0 +1,103 @@
+﻿@using System.Web.Razor.Text
+@using UniversityManagementSystemWebApp.Models.ViewModels
+@model UniversityManagementSystemWebApp.Models.ViewModels.AssignedCoursesView
+@{
+    ViewBag.Title = "Assigned Corses View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-body single-service-bg">
+    <div class="issue-book-area">
+        <div class="formdesign">
+            <h2>@ViewBag.Title</h2>
+
+            @using (Html.BeginForm())
+            {
+                <table>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.DepartmentId)</td>
+                        <td>
+                            @Html.DropDownListFor(x => x.DepartmentId,
+             (List<SelectListItem>)ViewBag.DepartmentList, "--SELECT--", new { @class = "btn btn-default dropdown-toggle" })
+                            @Html.ValidationMessageFor(x => x.DepartmentId)
+                        </td>
+                    </tr>
+
+                </table>
+
+                <h2>Course Information</h2>
+                <table border="1" id="CourseDetails" class="table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name/Title</th>
+                            <th>Semester</th>
+                            <th>Assigned To</th>
+                        </tr>
+                    </thead>
+                    <tbody id="CourseDetailsBody"></tbody>
+
+                </table>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+
+    $(document).ready(function () {
+
+        $("#DepartmentId").change(function () {
+
+            var deptId = $("#DepartmentId").val();
+            var json = { departmentId: deptId };
+
+            $.ajax({
+                type: "POST",
+
+                url: '@Url.Action("Show", "AssignedCoursesView")',
+
+                contentType: "application/json; charset=utf-8",
+
+                data: JSON.stringify(json),
+
+                success: function (data) {
+
+                    $("#CourseDetailsBody").empty();
+
+                    $.each(data, function (key, value) {
+
+                        $("#CourseDetailsBody").append('<tr> <td>' + value.CourseCode + '</td>  ' +
+                            ' <td>' + value.CourseName + '</td>' +
+                            '<td> ' + value.SemesterName + ' </td>' +
+                            '<td> ' + value.AssignedTeacherName + ' </td>' +
+                            '</tr>');
+
+                    });
+                }
+            });
+        });
+    });
+
+</script>
+
+}
+
+@*@{
+    ViewBag.Title = "Assigned Corses View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-body single-service-bg">
+    <div class="issue-book-area">
+        <div class="formdesign">
+            <h2>@ViewBag.Title</h2>
+
+
+
+        </div>
+    </div>
+</div>*@

@@ -1,0 +1,135 @@
+﻿@using System.Runtime.Remoting.Messaging
+@using Microsoft.Ajax.Utilities
+@using UniversityManagementSystemWebApp.Models
+@using UniversityManagementSystemWebApp.Models.ViewModels
+@model UniversityManagementSystemWebApp.Models.ViewModels.ResultView
+@{
+    ViewBag.Title = "View Result";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-body single-service-bg">
+    <div class="issue-book-area">
+        <div class="formdesign">
+            <h2>@ViewBag.Title</h2>
+
+            @using (Html.BeginForm())
+            {
+                <table>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Id)</td>
+                        <td>
+                            @Html.DropDownListFor(x => x.Id, (List<SelectListItem>)ViewBag.StudentList, "--SELECT--", new { @class = "btn btn-default dropdown-toggle" })
+                            @Html.ValidationMessageFor(x => x.Id)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Name")</td>
+                        <td>
+                            @Html.TextBox("StudentName", null, new { @readonly = "readonly" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Email")</td>
+                        <td>
+                            @Html.TextBox("StudentEmail", null, new { @readonly = "readonly" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Department")</td>
+                        <td>@Html.TextBox("DepartmentName", null, new { @readonly = "readonly" })</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a id="pdfId" href="#" class="btn btn-default">Make PDF</a>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+                <table border="1" id="ResultDetails" class="table">
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Name</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ResultDetailsBody"></tbody>
+                    
+                </table>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+
+        $(document).ready(function() {
+
+            $("#Id").change(function() {
+
+                var studentId = $("#Id").val();
+                if (studentId == "") {
+
+                    $("#StudentName").val("");
+                    $("#StudentEmail").val("");
+                    $("#DepartmentName").val("");
+                    $("#ResultDetailsBody").empty();
+
+                } else {
+
+                    $("#StudentName").val("");
+                    $("#StudentEmail").val("");
+                    $("#DepartmentName").val("");
+                    $("#ResultDetailsBody").empty();
+
+                    var json = { studentId: studentId };
+
+                    $.ajax({
+                        type: "POST",
+
+                        url: '@Url.Action("GetStudentInfo", "ViewResult")',
+
+                        contentType: "application/json; charset=utf-8",
+
+                        data: JSON.stringify(json),
+
+                        success: function(data) {
+
+
+                            $("#StudentName").val(data.Name);
+                            $("#StudentEmail").val(data.Email);
+                            $("#DepartmentName").val(data.DepartmentName);
+
+                        }
+                    });
+
+                    var id = $("#Id").val();
+                    $("#pdfId").attr("href", "/ViewResult/ExportPdf?id=" + id);
+
+                    $.ajax({
+                        type: "POST",
+
+                        url: '@Url.Action("GetAllResult", "ViewResult")',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(json),
+                        success: function(data) { //$("#ResultDetailsBody").empty();
+                            $.each(data, function(key, value) {
+                                if (value.Grade == "") {
+                                    value.Grade = "Not Graded Yet";
+                                }
+                                $("#ResultDetailsBody").append('<tr> <td>' + value.CourseCode + '</td>  ' + ' <td>' + value.CourseName + '</td>' + '<td> ' + value.Grade + ' </td>' + '</tr>');
+                            });
+                        }
+                    });
+                }
+            });
+
+
+        });
+    </script>
+}

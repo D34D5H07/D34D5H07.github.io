@@ -1,0 +1,222 @@
+﻿@model UniversityManagementSystemWebApp.Models.AllocateClassroom
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Save</title>
+</head>
+<body>
+<div>
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myForm" }))
+    {
+        <table>
+            <tr>
+                <td>@Html.LabelFor(x => x.DepartmentId)</td>
+                <td>
+                    @Html.DropDownListFor(x => x.DepartmentId, (List<SelectListItem>) ViewBag.DepartmentList, "--SELECT--")
+                    @Html.ValidationMessageFor(x => x.DepartmentId)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(x => x.CourseId)</td>
+                <td>
+                    <select id="CourseId" name="CourseId">
+                        <option>--Select--</option>
+                    </select>
+                    @Html.ValidationMessageFor(x => x.CourseId)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(x => x.RoomId)</td>
+                <td>
+                    @Html.DropDownListFor(x => x.RoomId, (List<SelectListItem>) ViewBag.RoomList, "--SELECT--")
+                    @Html.ValidationMessageFor(x => x.RoomId)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(x => x.DayId)</td>
+                <td>
+                    @Html.DropDownListFor(x => x.DayId, (List<SelectListItem>) ViewBag.DayList, "--SELECT--")
+                    @Html.ValidationMessageFor(x => x.DayId)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.Label("From")</td>
+                <td>
+                    @Html.TextBox("FromTimeH", null, new { style = "width:50px", placeholder="Hours", maxlength = 2, onkeypress="return event.charCode >= 48 && event.charCode <= 57" }):
+                    @Html.TextBox("FromTimeM", null, new { style = "width:50px", placeholder = "Minutes", maxlength = 2, onkeypress = "return event.charCode >= 48 && event.charCode <= 57" })
+                    @Html.RadioButton("From", "AM")AM
+                    @Html.RadioButton("From", "PM")PM
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.Label("To")</td>
+                <td>
+                    @Html.TextBox("ToTimeH", null, new { style = "width:50px", placeholder = "Hours", maxlength = 2, onkeypress = "return event.charCode >= 48 && event.charCode <= 57" }):
+                    @Html.TextBox("ToTimeM", null, new { style = "width:50px", placeholder = "Minutes", maxlength = 2, onkeypress = "return event.charCode >= 48 && event.charCode <= 57" })
+                    @Html.RadioButton("To", "AM")AM
+                    @Html.RadioButton("To", "PM")PM 
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Allocate" id="Allocate" name="Allocate"/>
+                </td>
+            </tr>
+            
+        </table>
+    }
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $("#DepartmentId").change(function() {
+
+            var deptId = $("#DepartmentId").val();
+
+            if (deptId == "") {
+                $("#CourseId").empty();
+                $("#CourseId").append('<option>--Select--</option>');
+
+
+            } else {
+                var json = { departmentId: deptId };
+
+                //Get Course List
+                $.ajax({
+                    type: "POST",
+
+                    url: '@Url.Action("GetCourseList", "AllocateClassroom")',
+
+                    contentType: "application/json; charset=utf-8",
+
+                    data: JSON.stringify(json),
+
+                    success: function(data) {
+
+                        $("#CourseId").empty();
+                        $("#CourseId").append('<option value="">--Select--</option>');
+                        $.each(data, function(key, value) {
+
+                            $("#CourseId").append('<option value="' + value.Id + '">' + value.Name + '</option>');
+
+                        });
+                    }
+                });
+
+            }
+
+        });
+
+        $("#FromTimeH").keyup(function () {
+            var v = $("#FromTimeH").val();
+            if (v > 12) {
+                $("#FromTimeH").val(12);
+            }
+        });
+        $("#FromTimeM").keyup(function () {
+            var v = $("#FromTimeM").val();
+            if (v > 59) {
+                $("#FromTimeM").val(59);
+            }
+        });
+        $("#ToTimeH").keyup(function () {
+            var v = $("#ToTimeH").val();
+            if (v > 12) {
+                $("#ToTimeH").val(12);
+           }
+            
+        });
+        $("#ToTimeM").keyup(function () {
+            var v = $("#ToTimeM").val();
+            if (v > 59) {
+                $("#ToTimeM").val(59);
+            }
+        });
+
+        
+        function checking() {
+            var ft1 = $("#FromTimeH").val().toString();
+            var ft2 = $("#FromTimeM").val().toString();
+            var ft3 = $("#From").val().toString();
+            var ft = ft1 + ft2 + ft3;
+            var ftime = ft.time;
+
+            var tt1 = $("#ToTimeH").val().toString();
+            var tt2 = $("#ToTimeM").val().toString();
+            var tt3 = $("#To").val().toString();
+            var tt = tt1 + tt2 + tt3;
+            var ttime = tt.time;
+
+            if (ftime < ttime) {
+                error.message = "Time Format Is Not Correct";
+            }
+        }
+
+        
+
+        function validateForm() {
+            var radios = document.getElementsByName("From");
+            var formValid = false;
+
+            var i = 0;
+            while (!formValid && i < radios.length) {
+                if (radios[i].checked) formValid = true;
+                i++;
+            }
+
+            if (!formValid) alert("Must check some option!");
+            return formValid;
+        }
+
+        
+
+        //Validation
+        $("#myForm").validate({
+            errorLabelContainer: $("ul", $('div.error-container')),
+            wrapper: 'li',
+            rules: {
+                FromTimH: {
+                    required: true,
+                    maxlength: 1,
+                    number: true,
+                    range: 12
+                },
+                FromTimM: {
+                    required: true
+                },
+                ToTimH: {
+                    required: true
+                },
+                ToTimM: {
+                    required: true
+                }
+            },
+            messages: {
+                FromTimeH: {
+                    required: "Please enter a time"
+                },
+                FromTimeM: {
+                    required: "Please enter a time"
+                },
+                TOTimeH: {
+                    required: "Please enter a time"
+                },
+                ToTimeM: {
+                    required: "Please enter a time"
+                }
+             }
+        });
+    });
+</script>
+</body>
+</html>

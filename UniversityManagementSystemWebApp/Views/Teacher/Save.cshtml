@@ -1,0 +1,83 @@
+﻿@model UniversityManagementSystemWebApp.Models.Teacher
+@{
+    ViewBag.Title = "Teacher Entry";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-body single-service-bg">
+    <div class="issue-book-area">
+        <div class="formdesign">
+            <h2>@ViewBag.Title</h2>
+
+            @using (Html.BeginForm())
+            {
+                <table>
+
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Name)</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Name)
+                            @Html.ValidationMessageFor(x => x.Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Address)</td>
+                        <td>
+                            @Html.TextAreaFor(x => x.Address)
+                            @Html.ValidationMessageFor(x => x.Address)
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Email)</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Email)
+                            @Html.ValidationMessageFor(x => x.Email)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.ContactNo)</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.ContactNo)
+                            @Html.ValidationMessageFor(x => x.ContactNo)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.DesignationId)</td>
+                        <td>
+                            @Html.DropDownListFor(x => x.DesignationId,
+          (List<SelectListItem>)ViewBag.DesignationList, "--SELECT--", new { @class = "btn btn-default dropdown-toggle" })
+                            @Html.ValidationMessageFor(x => x.DesignationId)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.DepartmentId)</td>
+                        <td>
+                            @Html.DropDownListFor(x => x.DepartmentId,
+             (List<SelectListItem>)ViewBag.DepartmentList, "--SELECT--", new { @class = "btn btn-default dropdown-toggle" })
+                            @Html.ValidationMessageFor(x => x.DepartmentId)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Credit)</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Credit)
+                            @Html.ValidationMessageFor(x => x.Credit)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" value="Save" /></td>
+
+                    </tr>
+
+                </table>
+
+                if (ViewBag.Message != null)
+                {
+                    <p>@ViewBag.Message</p>
+                }
+            }
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,139 @@
+﻿@using UniversityManagementSystemWebApp.Models
+@model UniversityManagementSystemWebApp.Models.Student
+@{
+    ViewBag.Title = "Register Student";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+}
+
+<div class="main-body single-service-bg">
+    <div class="student-info-area">
+        <div class="formdesign">
+            <h2>@ViewBag.Title</h2>
+
+            @using (Html.BeginForm())
+            {
+                <table>
+
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Name)</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Name)
+                            @Html.ValidationMessageFor(x => x.Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Email)</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Email)
+                            @Html.ValidationMessageFor(x => x.Email)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.ContactNo)</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.ContactNo)
+                            @Html.ValidationMessageFor(x => x.ContactNo)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Date)</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Date, new { @readonly = "readonly" })
+                            @Html.ValidationMessageFor(x => x.Date)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Address)</td>
+                        <td>
+                            @Html.TextAreaFor(x => x.Address)
+                            @Html.ValidationMessageFor(x => x.Address)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.DepartmentId)</td>
+                        <td>
+                            @Html.DropDownListFor(x => x.DepartmentId,
+             (List<SelectListItem>)ViewBag.DepartmentList, "--SELECT--", new { @class = "btn btn-default dropdown-toggle" })
+                            @Html.ValidationMessageFor(x => x.DepartmentId)
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="submit" value="Register" /></td>
+
+                    </tr>
+
+                </table>
+
+                if (ViewBag.Message != null)
+                {
+                    <p>@ViewBag.Message</p>
+
+                    if (IsPost)
+                    {
+                        if (ViewBag.Message == "Student Registration Is Successfull")
+                        {
+                            Student student = ViewBag.StudentInfo;
+                            string email = student.Email;
+                            string deptName = ViewBag.DepartmentName;
+                            <table>
+                                <tr>
+                                    <td>@Html.Label("Registration No:")</td>
+                                    <td>@Html.Label(student.RegistrationNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.Label("Name       :")</td>
+                                    <td>@Html.Label(student.Name)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.Label("Email  :")</td>
+                                    <td><label>@email</label></td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.Label("Contact No :")</td>
+                                    <td>@Html.Label(student.ContactNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.Label("Date    :")</td>
+                                    <td>@Html.Label(student.Date.ToShortDateString())</td>
+                                    @*<td>@Html.Label(Model.Date.ToShortDateString())</td>*@
+                                </tr>
+                                <tr>
+                                    <td>@Html.Label("Address :")</td>
+                                    <td>@Html.Label(student.Address)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.Label("Department  :")</td>
+                                    <td>@Html.Label(deptName)</td>
+                                </tr>
+                            </table>
+                        }
+                    }
+                }
+            }
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#Date').datepicker({
+            weekStart: 1,
+            todayHighlight: true,
+            todayBtn: "linked"
+        });
+        $("#Date").datepicker("setDate", new Date());
+    });
+    
+</script>
+}

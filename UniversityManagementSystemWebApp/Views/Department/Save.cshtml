@@ -1,0 +1,52 @@
+﻿@model UniversityManagementSystemWebApp.Models.Department
+@{
+    ViewBag.Title = "Department Entry";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="main-body single-service-bg">
+    <div class="issue-book-area">
+        <div class="formdesign">
+            <h2>Save Department</h2>
+
+            @using (Html.BeginForm())
+            {
+                <table>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Code)</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Code)<br/>
+                           @Html.ValidationMessageFor(x => x.Code)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Name)</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Name)<br/>
+                            @Html.ValidationMessageFor(x => x.Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        
+                        <td>
+                            <input type="submit" value="Save" class="btn-default btn"/>
+                        </td>
+                    </tr>
+                </table>
+
+                if (ViewBag.Message != null)
+                {
+                    <p>@ViewBag.Message</p>
+                }
+            }
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+

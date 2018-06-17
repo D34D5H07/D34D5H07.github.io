@@ -1,0 +1,131 @@
+﻿@model UniversityManagementSystemWebApp.Models.ViewModels.RoomAllocationView
+@{
+    ViewBag.Title = "Room Allocation View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-body single-service-bg">
+    <div class="issue-book-area">
+        <div class="formdesign">
+            <h2>View Class Schedule and Room Allocation Information</h2>
+
+            @using (Html.BeginForm())
+            {
+                <table>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Id)</td>
+                        <td>
+                            @Html.DropDownListFor(x => x.Id,
+                         (List<SelectListItem>)ViewBag.DepartmentList, "--SELECT--", new { @class = "btn btn-default dropdown-toggle" })
+                            @Html.ValidationMessageFor(x => x.Id)
+                        </td>
+                    </tr>
+
+                </table>
+                <br/>
+
+                <table border="1" id="ClassSchedule" class="table">
+                    <thead id="head"></thead>
+                    <tbody id="ClassScheduleBody"> </tbody>
+                </table>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+
+    <script>
+
+        $(document).ready(function() {
+
+            $("#Id").change(function() {
+                $("#head").empty();
+
+                var deptId = $("#Id").val();
+
+                if (deptId == "") {
+                    $("#head").empty();
+                    $("#ClassScheduleBody").empty();
+
+                } else {
+                    var json = { id: deptId };
+                    $("#head").append('<tr> <th>Course Code</th> <th>Name</th> <th>Schedule Info</th> </tr>');
+
+                    $.ajax({
+                        type: "POST",
+
+                        url: '@Url.Action("Show", "RoomAllocationView")',
+
+                        contentType: "application/json; charset=utf-8",
+
+                        data: JSON.stringify(json),
+
+                        success: function(data) {
+
+                            $("#ClassScheduleBody").empty();
+                            var courseCode = "";
+                            var courseName = "";
+                            var roomInfo = "";
+
+                            $.each(data, function(key, value) {
+
+                                if (courseCode === "") {
+                                    courseCode = value.CourseCode;
+                                    courseName = value.CourseName;
+
+                                    if (value.RoomNo === "") {
+
+                                        roomInfo = "Not Schedule Yet";
+
+                                    } else {
+                                        roomInfo = '<p>' + value.RoomNo + ',    ' + value.Day + ',  ' + value.FromTime + ' - ' + value.ToTime + '</p>';
+
+                                    }
+
+                                } else {
+                                    if (courseCode === value.CourseCode) {
+
+                                        roomInfo += '<p>' + value.RoomNo + ',   ' + value.Day + ',  ' + value.FromTime + ' - ' + value.ToTime + '</p>';
+
+                                    } else {
+                                        if (value.RoomNo === "") {
+                                            $("#ClassScheduleBody").append('<tr> <td>' + courseCode + '</td>  ' +
+                                                ' <td>' + courseName + '</td>' +
+                                                '<td> ' + roomInfo + ' </td>' +
+                                                '</tr>');
+                                            courseCode = value.CourseCode;
+                                            courseName = value.CourseName;
+                                            roomInfo = "Not Schedule Yet";
+
+                                        } else {
+                                            $("#ClassScheduleBody").append('<tr> <td>' + courseCode + '</td>  ' +
+                                                ' <td>' + courseName + '</td>' +
+                                                '<td> ' + roomInfo + ' </td>' +
+                                                '</tr>');
+
+                                            courseCode = value.CourseCode;
+                                            courseName = value.CourseName;
+                                            roomInfo = '<p>' + value.RoomNo + ',    ' + value.Day + ',  ' + value.FromTime + ' - ' + value.ToTime + '</p>';
+                                        }
+                                    }
+                                }
+                            });
+
+                            $("#ClassScheduleBody").append('<tr> <td>' + courseCode + '</td>  ' +
+                                ' <td>' + courseName + '</td>' +
+                                '<td> ' + roomInfo + ' </td>' +
+                                '</tr>');
+                        }
+                    });
+                }
+
+            });
+        });
+
+    </script>
+
+}

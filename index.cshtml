@@ -1,4 +1,69 @@
 @{
+    ViewBag.Title = "Home Page";
     Layout = "~UniversityManagementSystemWebApp/Views/Shared/_Layout.cshtml";
-    //Layout = null;
+    
 }
+
+<div class="main-content jumbotron">
+    <div id="templatemo_content">
+
+        <h2>University Management System</h2>
+
+        <div class="product_box margin_r_10">
+            <a href="@Url.Action("Department")">
+                <img src=@Url.Content("~/images/templatemo_image_06.jpg") alt="image" />
+            </a>
+            <h3>Department</h3>
+            <!-- <p>Etiam molestie massa nec nulla sagittis et luctus nulla ullamcorper a porttitor est. <a href="work_detail.jsp">More...</a></p> -->
+        </div>
+
+        <div class="product_box margin_r_10">
+            <a href="@Url.Action("Course")">
+                <img src=@Url.Content("~/images/templatemo_image_01.jpg") alt="image" />
+            </a>
+            <h3>Course</h3>
+            <!-- <p>Aenean aliquam ullamcorper metus, at cursus elit sodales dignissim. <a href="work_detail.jsp">More...</a></p> -->
+        </div>
+
+        <div class="product_box margin_r_10">
+
+            <a href="@Url.Action("Teacher")">
+                <img src=@Url.Content("~/images/teacher.jpg") alt="image" />
+            </a>
+            <h3>Teacher</h3>
+        </div>
+
+        <div class="product_box margin_r_10">
+
+            <a href="@Url.Action("Student")">
+                <img src=@Url.Content("~/images/student.jpg") alt="image" />
+            </a>
+            <h3>Student</h3>
+            <!-- <p>Proin rutrum neque vitae nisi venenatis blandit in ac dui. Curabitur ultricies semper. <a href="work_detail.jsp">More...</a></p> -->
+        </div>
+
+        <!-- <div class="cleaner"></div> -->
+
+        <div class="product_box margin_r_10">
+
+            <a href="@Url.Action("Result")">
+                <img src=@Url.Content("~/images/Results.jpg") alt="image" />
+            </a>
+            <h3>Result</h3>
+            <!-- <p>Mauris dignissim vehicula sapien, in accumsan quam commodo venenatis. <a href="work_detail.jsp">More...</a> </p> -->
+        </div>
+
+        <!-- 			<form action="ViewDueBook" method="get"> -->
+        <div class="product_box margin_r_10">
+            <a href="@Url.Action("Allocation")">
+                <img src=@Url.Content("~/images/allocation.jpg") alt="image" />
+            </a>
+            <h3>Allocation</h3>
+        </div>
+        <!-- 			</form> -->
+
+        <div class="cleaner_h20"></div>
+
+        <div class="cleaner"></div>
+    </div>
+</div>
